@@ -5,11 +5,13 @@ from django.utils import timezone
 
 class IncomeCategory(models.Model):
     income_category_name = models.CharField(max_length=100)
+    income_category_owner = models.IntegerField()
+    active_status = models.BooleanField(default=True)
     created_on = models.DateTimeField(default= timezone.now)
     updated_on = models.DateTimeField(null=True)
 
     def save(self, *args, **kwargs):
-        self.updated_on = timezone.now
+        self.updated_on = timezone.now()
         super(IncomeCategory,self).save(*args,**kwargs)
 
     def __str__(self):
