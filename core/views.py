@@ -25,7 +25,7 @@ def decode_jwt_token(token):
     except jwt.InvalidTokenError:
         return 'invalid'    
     except Exception as e:
-        print(e)
+        logger.error(e)
         return 'fail'
     
 def check_invalid_token(user_id):
