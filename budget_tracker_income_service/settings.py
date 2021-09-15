@@ -75,7 +75,7 @@ DATABASES = {
 
         'PASSWORD': '7426',
 
-        'HOST': 'localhost',
+        'HOST': 'income_db',
 
         'PORT': 5432,
 
