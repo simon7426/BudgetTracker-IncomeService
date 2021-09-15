@@ -209,3 +209,166 @@ class IncomeCategoryDetail(APIView):
                 "message": "Failed to delete category."
             }
             return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
+
+
+class IncomeList(APIView):
+    def get(self,request):
+        if request.META.get('HTTP_AUTHORIZATION'):
+            token = request.META.get('HTTP_AUTHORIZATION').split(' ')[-1]
+        else:
+            token = ''
+        user_id = decode_jwt_token(token)
+
+        err = check_invalid_token(user_id)
+        if err is not None:
+            return Response(err,status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            incomes = Income.objects.filter(user_id=user_id)
+            serializer = IncomeSerializer(incomes,many=True)
+
+            response_obj = {
+                "status": "success",
+                "data": serializer.data
+            }
+            return Response(response_obj,status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(e)
+            response_obj = {
+                "status": "fail",
+                "message": "Failed to retrive categories"
+            }
+            return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
+    
+    def post(self,request):
+        if request.META.get('HTTP_AUTHORIZATION'):
+            token = request.META.get('HTTP_AUTHORIZATION').split(' ')[-1]
+        else:
+            token = ''
+        user_id = decode_jwt_token(token)
+
+        err = check_invalid_token(user_id)
+        if err is not None:
+            return Response(err,status=status.HTTP_400_BAD_REQUEST)
+
+        try: 
+            data = request.data
+            data['user_id'] = user_id
+            serializer = IncomeSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                response_obj = {
+                    "status": "success",
+                    "message": "Successfully created category.",
+                    "income_id": serializer.data.get('id')
+                }
+                return Response(response_obj,status=status.HTTP_201_CREATED)
+            response_obj = {
+                "status": "fail",
+                "message": "Failed to create income."
+            }
+            return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(e)
+            response_obj = {
+                "status": "fail",
+                "message": "Failed to create category"
+            }
+            return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
+
+
+class IncomeDetail(APIView):
+    def get_object(self,request,pk,user_id):
+        try:
+            return Income.objects.get(pk=pk,user_id = user_id)
+        except Income.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        try:
+            if request.META.get('HTTP_AUTHORIZATION'):
+                token = request.META.get('HTTP_AUTHORIZATION').split(' ')[-1]
+            else:
+                token = ''
+            user_id = decode_jwt_token(token)
+
+            err = check_invalid_token(user_id)
+            if err is not None:
+                return Response(err,status=status.HTTP_400_BAD_REQUEST)
+
+            income = self.get_object(request,pk,user_id)
+            serializer = IncomeSerializer(income)
+            response_obj = {
+                "status": "success",
+                "message":"Income retrived successfully.",
+                "data": serializer.data
+            }
+            return Response(response_obj,status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(e)
+            response_obj = {
+                "status": "fail",
+                "message": "Failed to retrive income."
+            }
+            return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, pk):
+        try:
+            if request.META.get('HTTP_AUTHORIZATION'):
+                token = request.META.get('HTTP_AUTHORIZATION').split(' ')[-1]
+            else:
+                token = ''
+            user_id = decode_jwt_token(token)
+
+            err = check_invalid_token(user_id)
+            if err is not None:
+                return Response(err,status=status.HTTP_400_BAD_REQUEST)
+            
+            data = request.data
+            income = self.get_object(request,pk,user_id)
+            data['user_id'] = income.user_id
+            serializer = IncomeSerializer(income,data=data)
+            if serializer.is_valid():
+                serializer.save()
+                response_obj = {
+                    "status": "success",
+                    "message":"Successfully updated income",
+                    "income_id": serializer.data.get('id')
+                }
+                return Response(response_obj, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(e)
+            response_obj = {
+                "status": "fail",
+                "message": "Failed to update income"
+            }
+            return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        try:
+            if request.META.get('HTTP_AUTHORIZATION'):
+                token = request.META.get('HTTP_AUTHORIZATION').split(' ')[-1]
+            else:
+                token = ''
+            user_id = decode_jwt_token(token)
+
+            err = check_invalid_token(user_id)
+            if err is not None:
+                return Response(err,status=status.HTTP_400_BAD_REQUEST)
+            
+            income = self.get_object(request,pk,user_id)
+            income.delete()
+            response_obj = {
+                "status": "success",
+                "message": "Income deleted successfully."
+            }
+            return Response(response_obj, status = status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            logger.error(e)
+            response_obj = {
+                "status": "fail",
+                "message": "Failed to delete income."
+            }
+            return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
