@@ -11,6 +11,9 @@ from .serializer import IncomeCategorySerializer, IncomeSerializer
 from rest_framework.permissions import IsAuthenticated
 import jwt
 from rest_framework import status
+import logging
+
+logger = logging.getLogger('customLogger')
 
 def decode_jwt_token(token):
     try:
@@ -67,7 +70,7 @@ class IncomeCategoryList(APIView):
             }
             return Response(response_obj,status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
+            logger.error(e)
             response_obj = {
                 "status": "fail",
                 "message": "Failed to retrive categories"
@@ -103,7 +106,7 @@ class IncomeCategoryList(APIView):
             }
             return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print(e)
+            logger.error(e)
             response_obj = {
                 "status": "fail",
                 "message": "Failed to create category"
@@ -139,7 +142,7 @@ class IncomeCategoryDetail(APIView):
             }
             return Response(response_obj,status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
+            logger.error(e)
             response_obj = {
                 "status": "fail",
                 "message": "Failed to retrive category."
@@ -173,7 +176,7 @@ class IncomeCategoryDetail(APIView):
             else:
                 return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print(e)
+            logger.error(e)
             response_obj = {
                 "status": "fail",
                 "message": "Failed to update category"
@@ -200,7 +203,7 @@ class IncomeCategoryDetail(APIView):
             }
             return Response(response_obj, status = status.HTTP_204_NO_CONTENT)
         except Exception as e:
-            print(e)
+            logger.error(e)
             response_obj = {
                 "status": "fail",
                 "message": "Failed to delete category."
