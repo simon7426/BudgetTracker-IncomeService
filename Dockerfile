@@ -9,3 +9,4 @@ RUN pip install gunicorn
 EXPOSE 8000
 
 COPY . /app
+CMD ["gunicorn", "budget_tracker_income_service.wsgi", "--workers","4","--bind","0.0.0.0:8000"]
