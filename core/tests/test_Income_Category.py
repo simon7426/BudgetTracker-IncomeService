@@ -4,6 +4,8 @@ import os
 from rest_framework import status
 from django.test import TestCase
 from rest_framework.test import APIClient
+from budget_tracker_income_service.settings import SECRET_KEY
+import jwt
 
 from core.models import IncomeCategory
 from core.serializer import IncomeCategorySerializer
@@ -11,7 +13,10 @@ from core.serializer import IncomeCategorySerializer
 class testIncomeCategory(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.token = os.environ.get('TEST_TOKEN')
+        payload = {
+            "user_id": 1
+        }
+        self.token = jwt.encode(payload,SECRET_KEY,algorithm='HS256')
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
     
     def test_001_get_all_income_categories(self):

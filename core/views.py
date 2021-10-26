@@ -1,14 +1,11 @@
 from os import stat
 from re import L
 from django.http.response import Http404
-from rest_framework import serializers
-from rest_framework import response
 from budget_tracker_income_service.settings import SECRET_KEY
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Income, IncomeCategory
 from .serializer import IncomeCategorySerializer, IncomeSerializer
-from rest_framework.permissions import IsAuthenticated
 import jwt
 from rest_framework import status
 import logging
@@ -236,7 +233,7 @@ class IncomeList(APIView):
             logger.error(e)
             response_obj = {
                 "status": "fail",
-                "message": "Failed to retrive categories"
+                "message": "Failed to retrive incomes"
             }
             return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
     
@@ -259,7 +256,7 @@ class IncomeList(APIView):
                 serializer.save()
                 response_obj = {
                     "status": "success",
-                    "message": "Successfully created category.",
+                    "message": "Successfully created income.",
                     "income_id": serializer.data.get('id')
                 }
                 return Response(response_obj,status=status.HTTP_201_CREATED)
@@ -272,7 +269,7 @@ class IncomeList(APIView):
             logger.error(e)
             response_obj = {
                 "status": "fail",
-                "message": "Failed to create category"
+                "message": "Failed to create income"
             }
             return Response(response_obj,status=status.HTTP_400_BAD_REQUEST)
 
