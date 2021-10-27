@@ -9,12 +9,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY','my_precious')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOST').split(' ')
 
 
 # Application definition
@@ -67,17 +67,17 @@ WSGI_APPLICATION = 'budget_tracker_income_service.wsgi.application'
 DATABASES = {
     'default': {
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': os.environ.get('DJANGO_DB_ENGINE'),
 
-        'NAME': 'income_service',
+        'NAME': os.environ.get('DJANGO_DB_NAME'),
 
-        'USER': 'postgres',
+        'USER': os.environ.get('DJANGO_DB_USER'),
 
-        'PASSWORD': os.environ.get('DB_PASS',7426),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASS'),
 
-        'HOST': os.environ.get('DB_HOST','localhost'),
+        'HOST': os.environ.get('DJANGO_DB_HOST'),
 
-        'PORT': 5432,
+        'PORT': os.environ.get('DJANGO_DB_PORT'),
 
     }
 }
