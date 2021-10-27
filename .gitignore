@@ -150,4 +150,5 @@ dmypy.json
 cython_debug/
 postgres-data
 .env.prod
+manage.prod.py
 # End of https://www.toptal.com/developers/gitignore/api/django

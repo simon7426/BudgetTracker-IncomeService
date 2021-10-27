@@ -106,7 +106,6 @@ class testIncome(TestCase):
             "amount": 100
         }
         response = self.client.put('/income/1',json.dumps(data),content_type='application/json')
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get('/income/1')
         self.assertEqual(response.data.get('data').get('description'),'test_description_put')
