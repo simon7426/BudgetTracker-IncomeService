@@ -4,8 +4,7 @@ ENV PYTHONUNBUFFERED=1
 RUN mkdir /app
 WORKDIR /app
 COPY requirements.txt /app
-RUN pip install -r requirements.txt
-RUN pip install gunicorn
+RUN pip install -r requirements.txt gunicorn
 EXPOSE 8000
 
 COPY . /app
